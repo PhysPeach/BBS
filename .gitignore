@@ -1,0 +1,4 @@
+*.exe
+.vscode
+bbs
+conf/app.conf
