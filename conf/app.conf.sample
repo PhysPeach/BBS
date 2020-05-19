@@ -1,3 +1,5 @@
 appname = bbs
 httpport = 8080
 runmode = dev
+
+psqlConn = postgres://physpeach:physpeach@127.0.0.1:5432/bbs?sslmode=disable
