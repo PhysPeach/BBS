@@ -1,0 +1,37 @@
+body {
+    background-color: #efefef;
+    margin: 0 0 0 0;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+}
+header {
+    background-color: #333;
+    padding: 5px 5px 5px 5px;
+    font-size: 24px;
+    color: #ffffff;
+}
+footer {
+    background-color: #333;
+    padding: 10px 10px 10px 10px;
+    font-size: 16px;
+    color: #ffffff;
+}
+.text-link {
+    color: #fff;
+    text-decoration: none;
+}
+.button {
+    background-color: #fff;
+    margin: 0px 5px 0px 5px;
+    padding: 0px 10px 0px 10px;
+    border-radius: 3px;
+    color: #333;
+    text-decoration: none;
+}
+nav {
+    display: flex;
+}
+.nav-right-part {
+    margin-left: auto;
+}
