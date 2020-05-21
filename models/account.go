@@ -8,9 +8,9 @@ import (
 )
 
 type Account struct {
-	ID   int64 `orm:"auto"`
-	Name string `orm:"size(32)"` //have to avoid same Name
-	CreatedAt time.Time `orm:type(datetime;auto_now_add)`
+	ID   int64 `orm:"column(id);auto"` 
+	Name string `orm:"column(name);size(32);"` //have to avoid same Name
+	CreatedAt time.Time `orm:"column(created_at);type(datetime);auto_now_add"`
 }
 
 func init() {
