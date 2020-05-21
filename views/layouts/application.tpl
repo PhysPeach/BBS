@@ -10,7 +10,7 @@
 <body>
   <header>
     <nav>
-      <a href="#!" class="text-link">Peachな掲示板</a>
+      <a href="" class="text-link">Peachな掲示板</a>
       <div class="nav-right-part">
         <a href="login" class="button">Log in</a>
         <a href="signup" class="button">Sign up</a>
@@ -18,7 +18,9 @@
     </nav>
   </header>
   <main>
-    {{.LayoutContent}}
+    <div class="main">
+      {{.LayoutContent}}
+    </div>
   </main>
   <footer>
     Github: <a href="https://github.com/PhysPeach/bbs">github.com/PhysPeach/bbs</a>
