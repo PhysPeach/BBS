@@ -5,13 +5,13 @@ import (
 	"github.com/astaxie/beego"
 )
 
-// TopController operations for Homepage
-type TopController struct {
+// ThreadsController operations for Homepage
+type ThreadsController struct {
 	beego.Controller
 }
 
 // URLMapping ...
-func (c *TopController) URLMapping() {
+func (c *ThreadsController) URLMapping() {
 	c.Mapping("Post", c.Post)
 	c.Mapping("GetOne", c.GetOne)
 	c.Mapping("GetAll", c.GetAll)
@@ -19,9 +19,9 @@ func (c *TopController) URLMapping() {
 	c.Mapping("Delete", c.Delete)
 }
 
-func (c *TopController) Get() {
-	c.Data["Github"] = "github.com/PhysPeach/bbs"
-	c.TplName = "top.tpl"
+func (c *ThreadsController) Get() {
+	c.Layout = "layouts/application.tpl"
+	c.TplName = "threads/index.tpl"
 }
 
 // Post ...
@@ -31,7 +31,7 @@ func (c *TopController) Get() {
 // @Success 201 {object} models.Homepage
 // @Failure 403 body is empty
 // @router / [post]
-func (c *TopController) Post() {
+func (c *ThreadsController) Post() {
 }
 
 // GetOne ...
@@ -41,7 +41,7 @@ func (c *TopController) Post() {
 // @Success 200 {object} models.Homepage
 // @Failure 403 :id is empty
 // @router /:id [get]
-func (c *TopController) GetOne() {
+func (c *ThreadsController) GetOne() {
 
 }
 
@@ -57,7 +57,7 @@ func (c *TopController) GetOne() {
 // @Success 200 {object} models.Homepage
 // @Failure 403
 // @router / [get]
-func (c *TopController) GetAll() {
+func (c *ThreadsController) GetAll() {
 
 }
 
@@ -69,7 +69,7 @@ func (c *TopController) GetAll() {
 // @Success 200 {object} models.Homepage
 // @Failure 403 :id is not int
 // @router /:id [put]
-func (c *TopController) Put() {
+func (c *ThreadsController) Put() {
 
 }
 
@@ -80,6 +80,6 @@ func (c *TopController) Put() {
 // @Success 200 {string} delete success!
 // @Failure 403 id is empty
 // @router /:id [delete]
-func (c *TopController) Delete() {
+func (c *ThreadsController) Delete() {
 
 }

@@ -12,17 +12,16 @@
     <nav>
       <a href="#!" class="text-link">Peachな掲示板</a>
       <div class="nav-right-part">
-        <a href="#!" class="button">Log in</a>
-        <a href="#!" class="button">Sign in</a>
+        <a href="login" class="button">Log in</a>
+        <a href="signup" class="button">Sign up</a>
       </div>
     </nav>
   </header>
-  <section class="Threads">
-    <h1>Threads</h1>
-  </section>
-
+  <main>
+    {{.LayoutContent}}
+  </main>
   <footer>
-    Github: <a href="https://{{.Github}}">{{.Github}}</a>
+    Github: <a href="https://github.com/PhysPeach/bbs">github.com/PhysPeach/bbs</a>
   </footer>
   <div class="backdrop"></div>
   <script src="/static/js/reload.min.js"></script>
