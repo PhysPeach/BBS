@@ -77,3 +77,12 @@ func ExistSameName(m *Account) (exist bool) {
 	exist = o.QueryTable(new(Account)).Filter("name", m.Name).Exist()
 	return
 }
+
+func CheckAccount(name string) (account *Account, err error){
+	o :=orm.NewOrm()
+	account = &Account{}
+	if err = o.QueryTable(new(Account)).Filter("name", name).One(account); err != nil {
+		return account, err
+	}
+	return account, nil
+}
