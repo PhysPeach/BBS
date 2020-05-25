@@ -7,6 +7,14 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.ThreadsController{})
-	beego.Router("/signup", &controllers.AccountsController{})
-	beego.Router("/login", &controllers.SessionsController{})
+	signupNs := beego.NewNamespace("/signup",
+		beego.NSRouter("", &controllers.AccountsController{},"post:Create"),
+		beego.NSRouter("/new", &controllers.AccountsController{},"get:New"),
+	)
+	beego.AddNamespace(signupNs)
+	loginNs := beego.NewNamespace("/login",
+		beego.NSRouter("", &controllers.SessionsController{}, "post:Create"),
+		beego.NSRouter("/new", &controllers.SessionsController{},"get:New"),
+	)
+	beego.AddNamespace(loginNs)
 }

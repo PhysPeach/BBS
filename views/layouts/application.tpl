@@ -10,10 +10,10 @@
 <body>
   <header>
     <nav>
-      <a href="" class="text-link">Peachな掲示板</a>
+      <a href="/" class="text-link">Peachな掲示板</a>
       <div class="nav-right-part">
-        <a href="login" class="button">Log in</a>
-        <a href="signup" class="button">Sign up</a>
+        <a href="/login/new" class="button">Log in</a>
+        <a href="/signup/new" class="button">Sign up</a>
       </div>
     </nav>
   </header>

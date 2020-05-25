@@ -28,12 +28,13 @@ type SessionsController struct {
 
 // URLMapping ...
 func (c *SessionsController) URLMapping() {
-	c.Mapping("Post", c.Post)
+	c.Mapping("New", c.New)
+	c.Mapping("Create", c.Create)
 }
 
-func (c *SessionsController) Get() {
+func (c *SessionsController) New() {
 	c.Layout = "layouts/application.tpl"
-	c.TplName = "sessions/login.tpl"
+	c.TplName = "sessions/new.tpl"
 }
 
 // Post ...
@@ -43,7 +44,7 @@ func (c *SessionsController) Get() {
 // @Success 201 {object} models.Sessions
 // @Failure 403 body is empty
 // @router / [post]
-func (c *SessionsController) Post() {
+func (c *SessionsController) Create() {
 	isValidate, account := ValificateAccount(c)
 	if !isValidate {
 		fmt.Println("Account does not exist")
