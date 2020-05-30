@@ -1,12 +1,28 @@
 package routers
 
 import (
+	"strings"
 	"github.com/physpeach/bbs/controllers"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 )
 
 func init() {
+	var FilterMethod = func(ctx *context.Context) {
+		if ctx.Input.Query("_method")!="" && ctx.Input.IsPost(){
+			  ctx.Request.Method = strings.ToUpper(ctx.Input.Query("_method"))
+		}
+	}
+	beego.InsertFilter("*", beego.BeforeRouter, FilterMethod)
+
 	beego.Router("/", &controllers.ThreadsController{})
+	accountsNs := beego.NewNamespace("/accounts/:accountname",
+		beego.NSRouter("", &controllers.AccountsController{}, "get:Show"),
+		beego.NSRouter("", &controllers.AccountsController{}, "put:Update"),
+		beego.NSRouter("", &controllers.AccountsController{}, "delete:Destroy"),
+		beego.NSRouter("/edit", &controllers.AccountsController{}, "get:Edit"),
+	)
+	beego.AddNamespace(accountsNs)
 	signupNs := beego.NewNamespace("/signup",
 		beego.NSRouter("", &controllers.AccountsController{},"post:Create"),
 		beego.NSRouter("/new", &controllers.AccountsController{},"get:New"),

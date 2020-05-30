@@ -36,6 +36,15 @@ func GetAccountById(id int64) (v *Account, err error) {
 	return nil, err
 }
 
+func GetAccountByName(name string) (v *Account, err error) {
+	o := orm.NewOrm()
+	v = &Account{Name: name}
+	if err = o.QueryTable(new(Account)).Filter("Name", name).RelatedSel().One(v); err == nil {
+		return v, nil
+	}
+	return nil, err
+}
+
 func GetAllAccount() (accounts []Account, err error) {
 	o := orm.NewOrm()
 	_, err = o.QueryTable(new(Account)).OrderBy("-created_at").All(&accounts)
