@@ -47,6 +47,7 @@ func (c *AccountsController) Create() {
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/index.tpl"
 }
+
 func (c *AccountsController) Show() {
 	name := c.Ctx.Input.Param(":accountname")
 	fmt.Println(name)
@@ -88,9 +89,7 @@ func(c *AccountsController) Update() {
 	if err := models.UpdateAccountById(account); err != nil {
 		c.Abort("500")
 	}
-	c.Data["accountname"] = updatingAccount.Name
-	c.Layout = "layouts/application.tpl"
-	c.TplName = "accounts/show.tpl"
+	c.Ctx.Redirect(302, "/accounts/" + account.Name)
 }
 
 func(c *AccountsController) Destroy() {
@@ -103,6 +102,5 @@ func(c *AccountsController) Destroy() {
 		fmt.Println(err)
 		c.Abort("500")
 	}
-	c.Layout = "layouts/application.tpl"
-	c.TplName = "threads/index.tpl"
+	c.Ctx.Redirect(302, "/")
 }
