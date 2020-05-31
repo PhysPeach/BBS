@@ -3,23 +3,9 @@ package controllers
 import (
 	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/session"
 
 	"github.com/physpeach/bbs/models"
 )
-
-var globalSessions *session.Manager
-func init(){
-	sessionConfig := &session.ManagerConfig{
-		CookieName: "gosessionid",
-		EnableSetCookie: true,
-		CookieLifeTime: 3600,
-		Gclifetime: 3600,
-		Maxlifetime: 3600,
-	}
-	globalSessions, _ = session.NewManager("memory", sessionConfig)
-    go globalSessions.GC()
-}
 
 // SessionsController operations for Sessions
 type SessionsController struct {
@@ -50,13 +36,7 @@ func (c *SessionsController) Create() {
 		fmt.Println("Account does not exist")
 		c.Abort("400")
 	}
-	sess, err := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	if err != nil {
-		fmt.Println("SessionStart Failed")
-		c.Abort("400")
-	}
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	sess.Set("acid", account.ID)
+	c.SetSession("acid", account.ID)
 	fmt.Println("Success to create session")
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/index.tpl"
