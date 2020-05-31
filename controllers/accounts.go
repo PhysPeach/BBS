@@ -49,28 +49,32 @@ func (c *AccountsController) Create() {
 }
 
 func (c *AccountsController) Show() {
-	name := c.Ctx.Input.Param(":accountname")
-	fmt.Println(name)
-	account, err := models.GetAccountByName(name)
+	acid := c.GetSession("acid")
+	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
 		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
 	c.Data["accountname"] = account.Name
+	c.Data["editable"] = (acid == account.ID)
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/show.tpl"
 }
 
 func (c *AccountsController) Edit() {
-	name := c.Ctx.Input.Param(":accountname")
-	account, err := models.GetAccountByName(name)
+	acid := c.GetSession("acid")
+	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
 		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
-	c.Data["accountname"] = account.Name
-	c.Layout = "layouts/application.tpl"
-	c.TplName = "accounts/edit.tpl"
+	if acid != account.ID {
+		c.Abort("403")
+	} else {
+		c.Data["accountname"] = account.Name
+		c.Layout = "layouts/application.tpl"
+		c.TplName = "accounts/edit.tpl"
+	}
 }
 
 func(c *AccountsController) Update() {
