@@ -2,7 +2,7 @@
   <section class="container">
     <h1>{{.accountname}}</h1>
     {{if .editable}}
-      <a href="/accounts/{{.accountname}}/edit" class="button">Edit</a>
+      <a href="/{{.accountname}}/edit" class="button">Edit</a>
     {{end}}
   </section>
   <h1>Threads</h1>

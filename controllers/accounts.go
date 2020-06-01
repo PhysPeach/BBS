@@ -93,7 +93,7 @@ func(c *AccountsController) Update() {
 	if err := models.UpdateAccountById(account); err != nil {
 		c.Abort("500")
 	}
-	c.Ctx.Redirect(302, "/accounts/" + account.Name)
+	c.Ctx.Redirect(302, "/" + account.Name)
 }
 
 func(c *AccountsController) Destroy() {

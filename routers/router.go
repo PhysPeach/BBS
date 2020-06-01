@@ -16,20 +16,20 @@ func init() {
 	beego.InsertFilter("*", beego.BeforeRouter, FilterMethod)
 
 	beego.Router("/", &controllers.ThreadsController{})
-	accountsNs := beego.NewNamespace("/accounts/:accountname",
-		beego.NSRouter("", &controllers.AccountsController{}, "get:Show"),
-		beego.NSRouter("", &controllers.AccountsController{}, "put:Update"),
-		beego.NSRouter("", &controllers.AccountsController{}, "delete:Destroy"),
+	accountsNs := beego.NewNamespace("/:accountname",
+		beego.NSRouter("/", &controllers.AccountsController{}, "get:Show"),
+		beego.NSRouter("/", &controllers.AccountsController{}, "put:Update"),
+		beego.NSRouter("/", &controllers.AccountsController{}, "delete:Destroy"),
 		beego.NSRouter("/edit", &controllers.AccountsController{}, "get:Edit"),
 	)
 	beego.AddNamespace(accountsNs)
 	signupNs := beego.NewNamespace("/signup",
-		beego.NSRouter("", &controllers.AccountsController{},"post:Create"),
+		beego.NSRouter("/", &controllers.AccountsController{},"post:Create"),
 		beego.NSRouter("/new", &controllers.AccountsController{},"get:New"),
 	)
 	beego.AddNamespace(signupNs)
 	loginNs := beego.NewNamespace("/login",
-		beego.NSRouter("", &controllers.SessionsController{}, "post:Create"),
+		beego.NSRouter("/", &controllers.SessionsController{}, "post:Create"),
 		beego.NSRouter("/new", &controllers.SessionsController{},"get:New"),
 	)
 	beego.AddNamespace(loginNs)
