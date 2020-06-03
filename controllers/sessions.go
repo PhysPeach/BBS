@@ -38,10 +38,7 @@ func (c *SessionsController) Create() {
 	}
 	c.SetSession("sessName", account.Name)
 	fmt.Println("Success to create session")
-	c.Data["sessName"] = account.Name
-	c.Layout = "layouts/application.tpl"
-	c.TplName = "threads/index.tpl"
-
+	c.Ctx.Redirect(302, "/" + account.Name)
 }
 
 func ValificateAccount(c *SessionsController)(bool, *models.Account){
