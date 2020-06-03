@@ -16,6 +16,7 @@ type SessionsController struct {
 func (c *SessionsController) URLMapping() {
 	c.Mapping("New", c.New)
 	c.Mapping("Create", c.Create)
+	c.Mapping("Destroy", c.Destroy)
 }
 
 func (c *SessionsController) New() {
@@ -39,6 +40,11 @@ func (c *SessionsController) Create() {
 	c.SetSession("sessName", account.Name)
 	fmt.Println("Success to create session")
 	c.Ctx.Redirect(302, "/" + account.Name)
+}
+
+func (c *SessionsController) Destroy() {
+	c.DestroySession()
+	c.Ctx.Redirect(302, "/")
 }
 
 func ValificateAccount(c *SessionsController)(bool, *models.Account){

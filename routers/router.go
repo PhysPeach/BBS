@@ -30,6 +30,7 @@ func init() {
 	beego.AddNamespace(signupNs)
 	loginNs := beego.NewNamespace("/login",
 		beego.NSRouter("/", &controllers.SessionsController{}, "post:Create"),
+		beego.NSRouter("/", &controllers.SessionsController{}, "delete:Destroy"),
 		beego.NSRouter("/new", &controllers.SessionsController{},"get:New"),
 	)
 	beego.AddNamespace(loginNs)

@@ -14,7 +14,10 @@
       <div class="nav-right-part">
         {{if .sessName}}
           <a href="/{{.sessName}}" class="button">{{.sessName}}</a>
-          <a href="#" class="button">Log out</a>
+          <form action="/login" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" class="button" value="Log out">
+          </form>
         {{else}}
           <a href="/signup/new" class="button">Sign up</a>
           <a href="/login/new" class="button">Log in</a>
