@@ -12,8 +12,13 @@
     <nav>
       <a href="/" class="text-link">Peachな掲示板</a>
       <div class="nav-right-part">
-        <a href="/login/new" class="button">Log in</a>
-        <a href="/signup/new" class="button">Sign up</a>
+        {{if .sessName}}
+          <a href="/{{.sessName}}" class="button">{{.sessName}}</a>
+          <a href="#" class="button">Log out</a>
+        {{else}}
+          <a href="/signup/new" class="button">Sign up</a>
+          <a href="/login/new" class="button">Log in</a>
+        {{end}}
       </div>
     </nav>
   </header>

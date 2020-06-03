@@ -20,6 +20,7 @@ func (c *ThreadsController) URLMapping() {
 }
 
 func (c *ThreadsController) Get() {
+	c.Data["sessName"] = c.GetSession("sessName")
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/index.tpl"
 }

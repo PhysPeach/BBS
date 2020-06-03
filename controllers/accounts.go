@@ -44,6 +44,7 @@ func (c *AccountsController) Create() {
 			c.Abort("500")
 		}
 	}
+	c.Data["sessName"] = c.GetSession("sessName")
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/index.tpl"
 }
@@ -57,6 +58,7 @@ func (c *AccountsController) Show() {
 	}
 	c.Data["accountname"] = account.Name
 	c.Data["editable"] = (sessName == account.Name)
+	c.Data["sessName"] = sessName
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/show.tpl"
 }
@@ -72,6 +74,7 @@ func (c *AccountsController) Edit() {
 		c.Abort("403")
 	} else {
 		c.Data["accountname"] = account.Name
+		c.Data["sessName"] = sessName
 		c.Layout = "layouts/application.tpl"
 		c.TplName = "accounts/edit.tpl"
 	}
