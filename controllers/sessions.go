@@ -36,7 +36,7 @@ func (c *SessionsController) Create() {
 		fmt.Println("Account does not exist")
 		c.Abort("400")
 	}
-	c.SetSession("acid", account.ID)
+	c.SetSession("sessName", account.Name)
 	fmt.Println("Success to create session")
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/index.tpl"

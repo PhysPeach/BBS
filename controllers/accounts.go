@@ -49,26 +49,26 @@ func (c *AccountsController) Create() {
 }
 
 func (c *AccountsController) Show() {
-	acid := c.GetSession("acid")
+	sessName := c.GetSession("sessName")
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
 		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
 	c.Data["accountname"] = account.Name
-	c.Data["editable"] = (acid == account.ID)
+	c.Data["editable"] = (sessName == account.Name)
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/show.tpl"
 }
 
 func (c *AccountsController) Edit() {
-	acid := c.GetSession("acid")
+	sessName := c.GetSession("sessName")
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
 		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
-	if acid != account.ID {
+	if sessName != account.Name {
 		c.Abort("403")
 	} else {
 		c.Data["accountname"] = account.Name
