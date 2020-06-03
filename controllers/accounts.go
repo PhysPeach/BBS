@@ -44,9 +44,8 @@ func (c *AccountsController) Create() {
 			c.Abort("500")
 		}
 	}
-	c.Data["sessName"] = c.GetSession("sessName")
-	c.Layout = "layouts/application.tpl"
-	c.TplName = "threads/index.tpl"
+	c.SetSession("sessName", account.Name)
+	c.Ctx.Redirect(302, "/" + account.Name)
 }
 
 func (c *AccountsController) Show() {
