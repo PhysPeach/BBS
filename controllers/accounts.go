@@ -55,7 +55,13 @@ func (c *AccountsController) Show() {
 		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
+
+	threads, err := models.GetAllThreadByHostAccountId(account.ID)
+	if err != nil {
+		c.Abort("500")
+	}
 	c.Data["accountname"] = account.Name
+	c.Data["threads"] = threads
 	c.Data["editable"] = (sessName == account.Name)
 	c.Data["sessName"] = sessName
 	c.Layout = "layouts/application.tpl"

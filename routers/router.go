@@ -15,12 +15,18 @@ func init() {
 	}
 	beego.InsertFilter("*", beego.BeforeRouter, FilterMethod)
 
-	beego.Router("/", &controllers.ThreadsController{})
+	beego.Router("/", &controllers.ThreadsController{}, "get:Index")
 	accountsNs := beego.NewNamespace("/:accountname",
 		beego.NSRouter("/", &controllers.AccountsController{}, "get:Show"),
 		beego.NSRouter("/", &controllers.AccountsController{}, "put:Update"),
 		beego.NSRouter("/", &controllers.AccountsController{}, "delete:Destroy"),
 		beego.NSRouter("/edit", &controllers.AccountsController{}, "get:Edit"),
+		
+		beego.NSRouter("/", &controllers.ThreadsController{}, "post:Create"),
+		beego.NSNamespace("/:threadid",
+			beego.NSRouter("/", &controllers.ThreadsController{}, "get:Show"),
+			beego.NSRouter("/", &controllers.ThreadsController{}, "delete:Destroy"),
+		),
 	)
 	beego.AddNamespace(accountsNs)
 	signupNs := beego.NewNamespace("/signup",
