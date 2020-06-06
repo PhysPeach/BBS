@@ -60,7 +60,7 @@ func (c *AccountsController) Show() {
 	if err != nil {
 		c.Abort("500")
 	}
-	c.Data["accountname"] = account.Name
+	c.Data["account"] = account
 	c.Data["threads"] = threads
 	c.Data["editable"] = (sessName == account.Name)
 	c.Data["sessName"] = sessName

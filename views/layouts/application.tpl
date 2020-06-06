@@ -16,7 +16,7 @@
           <a href="/{{.sessName}}" class="button">{{.sessName}}</a>
           <form action="/login" method="POST">
             <input type="hidden" name="_method" value="DELETE">
-            <input type="submit" class="button" value="Log out">
+            <input type="submit" class="form-submit" value="Log out">
           </form>
         {{else}}
           <a href="/signup/new" class="button">Sign up</a>
