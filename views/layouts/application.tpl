@@ -11,7 +11,7 @@
   <header>
     <nav>
       <a href="/" class="text-link">Peachな掲示板</a>
-      <div class="nav-right-part">
+      <div class="nav-right">
         {{if .sessName}}
           <a href="/{{.sessName}}" class="button">{{.sessName}}</a>
           <form action="/login" method="POST">
