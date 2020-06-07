@@ -28,10 +28,6 @@ func init() {
 			beego.NSRouter("/", &controllers.ThreadsController{}, "delete:Destroy"),
 
 			beego.NSRouter("/", &controllers.CommentsController{}, "post:Create"),
-			beego.NSNamespace("/:commentid",
-				beego.NSRouter("/", &controllers.CommentsController{}, "get:Show"),
-				beego.NSRouter("/", &controllers.CommentsController{}, "delete:Destroy"),
-			),
 		),
 	)
 	beego.AddNamespace(accountsNs)

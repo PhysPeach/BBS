@@ -66,7 +66,12 @@ func (c *ThreadsController) Show() {
 	if err != nil {
 		c.Abort("500")
 	}
+	comments, err := models.GetAllCommentByHostThreadId(threadid)
+	if err != nil {
+		c.Abort("500")
+	}
 	c.Data["thread"] = thread
+	c.Data["comments"] = comments
 	c.Data["editable"] = (sessName == thread.HostAccount.Name)
 	c.Data["sessName"] = sessName
 	c.Layout = "layouts/application.tpl"

@@ -38,7 +38,7 @@ func GetCommentById(id int64) (v *Comment, err error) {
 	return nil, err
 }
 
-func GetAllThreadByHostThreadId(id int64)(comments []Comment, err error){
+func GetAllCommentByHostThreadId(id int64)(comments []Comment, err error){
 	o := orm.NewOrm()
 	_, err = o.QueryTable(new(Comment)).Filter("host_thread_id", id).RelatedSel().OrderBy("created_at").All(&comments)
 	return
