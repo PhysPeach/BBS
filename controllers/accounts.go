@@ -97,6 +97,9 @@ func(c *AccountsController) Update() {
 
 	updatingAccount := models.Account{
 		Name: c.GetString("Name")}
+	if account.Name =="" || 32 < utf8.RuneCountInString(account.Name){
+		c.Abort("400")
+	}
 	//avoid same name resistration
 	if models.ExistSameName(&updatingAccount) {
 		c.Abort("400")
