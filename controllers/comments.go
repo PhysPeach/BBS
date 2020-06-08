@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 	"strconv"
+	"unicode/utf8"
 	"github.com/physpeach/bbs/models"
 	"github.com/astaxie/beego"
 )
@@ -41,7 +42,7 @@ func (c *CommentsController) Create() {
 		HostThread: hostThread,
 	}
 	fmt.Println(comment.Content)
-	if comment.Content == "" {
+	if comment.Content == "" || 1024 < utf8.RuneCountInString(comment.Content){
 		c.Abort("400")
 	}
 	if _, err := models.AddComment(&comment); err != nil {
