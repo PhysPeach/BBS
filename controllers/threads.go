@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 	"strconv"
+	"unicode/utf8"
 	"github.com/physpeach/bbs/models"
 	"github.com/astaxie/beego"
 )
@@ -44,10 +45,10 @@ func (c *ThreadsController) Create() {
 		CreatedAt: time.Now(),
 		HostAccount: hostAccount,
 	}
-	if thread.Title == "" {
+	if thread.Title == "" || 64 < utf8.RuneCountInString(thread.Title) {
 		c.Abort("400")
 	}
-	if thread.Description == "" {
+	if thread.Description == "" || 256 < utf8.RuneCountInString(thread.Description){
 		c.Abort("400")
 	}
 	if _, err := models.AddThread(&thread); err != nil {
