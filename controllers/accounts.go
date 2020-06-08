@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"time"
+	"unicode/utf8"
 	"github.com/physpeach/bbs/models"
 	"github.com/astaxie/beego"
 )
@@ -36,6 +37,9 @@ func (c *AccountsController) Create() {
 	account := models.Account{
 		Name: c.GetString("Name"),
 		CreatedAt: time.Now()}
+	if account.Name =="" || 32 < utf8.RuneCountInString(account.Name){
+		c.Abort("400")
+	}
 	//avoid same name resistration
 	if models.ExistSameName(&account) {
 		c.Abort("400")
