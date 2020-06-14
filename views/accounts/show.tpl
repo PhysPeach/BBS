@@ -11,6 +11,18 @@
       </div>
     </div>
   </div>
+  {{if .sessName}}
+    <h1>New Thread</h1>
+    <div class="black-block">
+      <form action="/{{.sessName}}" method="POST">
+        <input type="text" class="form-underbar-input" placeholder="Title" name="Title">
+        <br>
+        <textarea class="form-textarea" placeholder="Description" name="Description"></textarea>
+        <br>
+        <input type="submit" class="form-submit" value="Create!">
+      </form>
+    </div>
+  {{end}}
   <h1>Threads by {{.account.Name}}</h1>
   {{range $key, $thread := .threads}}
     <section class="Thread">
