@@ -5,7 +5,6 @@ import (
 	"regexp"
 	"time"
 	"encoding/hex"
-	"unicode/utf8"
 	"golang.org/x/crypto/scrypt"
 	"github.com/physpeach/bbs/models"
 	"github.com/astaxie/beego"
@@ -52,7 +51,8 @@ func (c *AccountsController) Create() {
 		Name: c.GetString("Name"),
 		Password: password,
 		CreatedAt: time.Now()}
-	if account.Name =="" || 32 < utf8.RuneCountInString(account.Name){
+	nameRegex := regexp.MustCompile(`^[a-z\d]{8,32}$`)
+	if !nameRegex.MatchString(account.Name) {
 		c.Abort("400")
 	}
 	//avoid same name resistration
@@ -112,7 +112,8 @@ func(c *AccountsController) Update() {
 
 	updatingAccount := models.Account{
 		Name: c.GetString("Name")}
-	if account.Name =="" || 32 < utf8.RuneCountInString(account.Name){
+	nameRegex := regexp.MustCompile(`^[a-z\d]{8,32}$`)
+	if !nameRegex.MatchString(account.Name) {
 		c.Abort("400")
 	}
 	//avoid same name resistration
