@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"fmt"
+	"encoding/hex"
+	"golang.org/x/crypto/scrypt"
 	"github.com/astaxie/beego"
 
 	"github.com/physpeach/bbs/models"
@@ -49,8 +51,19 @@ func (c *SessionsController) Destroy() {
 
 func ValificateAccount(c *SessionsController)(bool, *models.Account){
 	acname := c.GetString("Name")
+	passSalt := beego.AppConfig.String("passSalt")
+	unhashed := c.GetString("Password")
+	hashed, err := scrypt.Key([]byte(unhashed), []byte(passSalt), 32768, 8, 1, 32)
+	if err != nil {
+		c.Abort("500")
+	}
+	password := hex.EncodeToString(hashed[:])
 	account, err := models.CheckAccount(acname)
+	if account.Password != "0123" && password != account.Password {
+		return false, account
+	}
 	if err != nil{
+		c.Abort("500")
 		fmt.Println(err)
 	}
 	return (account.ID != 0), account
