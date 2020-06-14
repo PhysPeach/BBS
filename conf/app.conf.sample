@@ -4,3 +4,4 @@ runmode = dev
 SessionOn = true
 
 psqlConn = postgres://physpeach:physpeach@127.0.0.1:5432/bbs?sslmode=disable
+passSalt = salt

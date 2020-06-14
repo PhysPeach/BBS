@@ -3,7 +3,9 @@ package controllers
 import (
 	"fmt"
 	"time"
+	"unsafe"
 	"unicode/utf8"
+	"golang.org/x/crypto/scrypt"
 	"github.com/physpeach/bbs/models"
 	"github.com/astaxie/beego"
 )
@@ -34,19 +36,30 @@ func (c *AccountsController) New(){
 // @Param      Name {string} string true
 // @router / [post]
 func (c *AccountsController) Create() {
+	passSalt := beego.AppConfig.String("passSalt")
+	unhashed := c.GetString("Password")
+	hashed, err := scrypt.Key([]byte(unhashed), []byte(passSalt), 32768, 8, 1, 32)
+	if err != nil {
+		c.Abort("500")
+	}
+	password := *(*string)(unsafe.Pointer(&hashed))
+	fmt.Println(password)
 	account := models.Account{
 		Name: c.GetString("Name"),
 		CreatedAt: time.Now()}
 	if account.Name =="" || 32 < utf8.RuneCountInString(account.Name){
 		c.Abort("400")
 	}
+	if utf8.RuneCountInString(unhashed) < 2 || 32 < utf8.RuneCountInString(unhashed) {
+		fmt.Println(unhashed)
+		c.Abort("400")
+	}
 	//avoid same name resistration
 	if models.ExistSameName(&account) {
 		c.Abort("400")
-	}else{
-		if _, err := models.AddAccount(&account); err != nil {
-			c.Abort("500")
-		}
+	}
+	if _, err := models.AddAccount(&account); err != nil {
+		c.Abort("500")
 	}
 	c.SetSession("sessName", account.Name)
 	c.Ctx.Redirect(302, "/" + account.Name)
