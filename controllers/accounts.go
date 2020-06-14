@@ -137,5 +137,6 @@ func(c *AccountsController) Destroy() {
 		fmt.Println(err)
 		c.Abort("500")
 	}
+	c.DestroySession()
 	c.Ctx.Redirect(302, "/")
 }
