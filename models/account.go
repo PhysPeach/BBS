@@ -3,13 +3,13 @@ package models
 import (
 	"fmt"
 	"time"
-
 	"github.com/astaxie/beego/orm"
 )
 
 type Account struct {
 	ID   int64 `orm:"column(id);auto"` 
 	Name string `orm:"column(name);size(32);"` //have to avoid same Name
+	Password string `orm:"column(password);size(32)"`
 	CreatedAt time.Time `orm:"column(created_at);type(datetime);auto_now_add"`
 }
 

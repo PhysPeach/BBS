@@ -3,7 +3,7 @@ package controllers
 import (
 	"fmt"
 	"time"
-	"unsafe"
+	"encoding/hex"
 	"unicode/utf8"
 	"golang.org/x/crypto/scrypt"
 	"github.com/physpeach/bbs/models"
@@ -38,20 +38,19 @@ func (c *AccountsController) New(){
 func (c *AccountsController) Create() {
 	passSalt := beego.AppConfig.String("passSalt")
 	unhashed := c.GetString("Password")
+	if utf8.RuneCountInString(unhashed) < 8 || 32 < utf8.RuneCountInString(unhashed) {
+		c.Abort("400")
+	}
 	hashed, err := scrypt.Key([]byte(unhashed), []byte(passSalt), 32768, 8, 1, 32)
 	if err != nil {
 		c.Abort("500")
 	}
-	password := *(*string)(unsafe.Pointer(&hashed))
-	fmt.Println(password)
+	password := hex.EncodeToString(hashed[:])
 	account := models.Account{
 		Name: c.GetString("Name"),
+		Password: password,
 		CreatedAt: time.Now()}
 	if account.Name =="" || 32 < utf8.RuneCountInString(account.Name){
-		c.Abort("400")
-	}
-	if utf8.RuneCountInString(unhashed) < 2 || 32 < utf8.RuneCountInString(unhashed) {
-		fmt.Println(unhashed)
 		c.Abort("400")
 	}
 	//avoid same name resistration
@@ -59,6 +58,7 @@ func (c *AccountsController) Create() {
 		c.Abort("400")
 	}
 	if _, err := models.AddAccount(&account); err != nil {
+		fmt.Println(err)
 		c.Abort("500")
 	}
 	c.SetSession("sessName", account.Name)
