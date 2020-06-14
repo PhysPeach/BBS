@@ -51,10 +51,11 @@ func (c *ThreadsController) Create() {
 	if thread.Description == "" || 256 < utf8.RuneCountInString(thread.Description){
 		c.Abort("400")
 	}
-	if _, err := models.AddThread(&thread); err != nil {
+	threadid, err := models.AddThread(&thread)
+	if err != nil {
 		c.Abort("500")
 	}
-	c.Ctx.Redirect(302, "/")
+	c.Ctx.Redirect(302, "/" + hostAccount.Name + "/" + strconv.FormatInt(threadid, 10))
 }
 
 func (c *ThreadsController) Show() {
