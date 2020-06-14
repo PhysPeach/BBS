@@ -6,6 +6,8 @@
       <br>
       <input type="password" class="form-underbar-input" placeholder="Password" name="Password">
       <br>
+      <input type="password" class="form-underbar-input" placeholder="Password Again" name="PasswordConfirmation">
+      <br>
       <input type="submit" class="form-submit" value="Create!">
     </form>
   </div>

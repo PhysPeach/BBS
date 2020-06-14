@@ -38,6 +38,9 @@ func (c *AccountsController) New(){
 func (c *AccountsController) Create() {
 	passSalt := beego.AppConfig.String("passSalt")
 	unhashed := c.GetString("Password")
+	if unhashed != c.GetString("PasswordConfirmation"){
+		c.Abort("400")
+	}
 	passRegex := regexp.MustCompile(`^[a-zA-Z\d]{8,32}$`)
 	if !passRegex.MatchString(unhashed) {
 		c.Abort("400")
