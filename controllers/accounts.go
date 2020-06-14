@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"regexp"
 	"time"
 	"encoding/hex"
 	"unicode/utf8"
@@ -38,7 +39,8 @@ func (c *AccountsController) New(){
 func (c *AccountsController) Create() {
 	passSalt := beego.AppConfig.String("passSalt")
 	unhashed := c.GetString("Password")
-	if utf8.RuneCountInString(unhashed) < 8 || 32 < utf8.RuneCountInString(unhashed) {
+	passRegex := regexp.MustCompile(`[a-zA-Z\d]{8,32}`)
+	if !passRegex.MatchString(unhashed) {
 		c.Abort("400")
 	}
 	hashed, err := scrypt.Key([]byte(unhashed), []byte(passSalt), 32768, 8, 1, 32)
