@@ -69,7 +69,11 @@ func (c *ThreadsController) Show() {
 		sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
 		sessAccountName = sessAccount.Name
 	}
-	threadid, err := strconv.ParseInt(c.Ctx.Input.Param(":threadid"), 10, 64)
+	threadidStr := c.Ctx.Input.Param(":threadid")
+	if len(threadidStr) >= 2 || threadidStr[0:1] == "0" {
+		c.Abort("400")
+	}
+	threadid, err := strconv.ParseInt(threadidStr, 10, 64)
 	if err != nil {
 		c.Abort("500")
 	}
