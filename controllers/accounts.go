@@ -54,7 +54,7 @@ func (c *AccountsController) Create() {
 		Name: c.GetString("Name"),
 		Password: password,
 		CreatedAt: time.Now()}
-	nameRegex := regexp.MustCompile(`^[a-z\d]{8,32}$`)
+	nameRegex := regexp.MustCompile(`^[a-z\d]{1,32}$`)
 	if !nameRegex.MatchString(account.Name) {
 		c.Abort("400")
 	}
