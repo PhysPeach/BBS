@@ -77,6 +77,9 @@ func (c *ThreadsController) Show() {
 	if err != nil {
 		c.Abort("500")
 	}
+	if thread.HostAccount.Name != c.Ctx.Input.Param(":accountname"){
+		c.Abort("400")
+	}
 	comments, err := models.GetAllCommentByHostThreadId(threadid)
 	if err != nil {
 		c.Abort("500")
