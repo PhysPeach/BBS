@@ -34,8 +34,8 @@ func (c *SessionsController) New() {
 // @Failure 403 body is empty
 // @router / [post]
 func (c *SessionsController) Create() {
-	isValidate, account := ValificateAccount(c)
-	if !isValidate {
+	isCorrect, account := ConfirmAccountPassword(c)
+	if !isCorrect {
 		fmt.Println("Account does not exist")
 		c.Abort("400")
 	}
@@ -48,8 +48,8 @@ func (c *SessionsController) Destroy() {
 	c.Ctx.Redirect(302, "/")
 }
 
-func ValificateAccount(c *SessionsController)(bool, *models.Account){
-	acname := c.GetString("Name")
+func ConfirmAccountPassword(c *SessionsController)(bool, *models.Account){
+	accountName := c.GetString("Name")
 	passSalt := beego.AppConfig.String("passSalt")
 	unhashed := c.GetString("Password")
 	hashed, err := scrypt.Key([]byte(unhashed), []byte(passSalt), 32768, 8, 1, 32)
@@ -57,7 +57,7 @@ func ValificateAccount(c *SessionsController)(bool, *models.Account){
 		c.Abort("500")
 	}
 	password := hex.EncodeToString(hashed[:])
-	account, err := models.CheckAccount(acname)
+	account, err := models.GetAccountByName(accountName)
 	if account.Password != "0123" && password != account.Password {
 		return false, account
 	}
