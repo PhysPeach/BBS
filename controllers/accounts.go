@@ -152,5 +152,9 @@ func ConfirmAccountName(name string) (bool) {
 	if exist := models.ExistSameAccountName(name); exist {
 		return false
 	}
+	//blacklist
+	if name == "login" || name == "signup"{
+		return false
+	}
 	return true
 }
