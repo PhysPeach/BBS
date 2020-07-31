@@ -54,12 +54,9 @@ func (c *AccountsController) Create() {
 		Name: c.GetString("Name"),
 		Password: password,
 		CreatedAt: time.Now()}
-	nameRegex := regexp.MustCompile(`^[a-z\d]{1,32}$`)
-	if !nameRegex.MatchString(account.Name) {
-		c.Abort("400")
-	}
-	//avoid same name resistration
-	if models.ExistSameName(&account) {
+	isValid := ConfirmAccountName(account.Name)
+	if !isValid {
+		fmt.Println("invalid AccountName")
 		c.Abort("400")
 	}
 	if _, err := models.AddAccount(&account); err != nil {
@@ -121,12 +118,9 @@ func(c *AccountsController) Update() {
 
 	updatingAccount := models.Account{
 		Name: c.GetString("Name")}
-	nameRegex := regexp.MustCompile(`^[a-z\d]{1,32}$`)
-	if !nameRegex.MatchString(updatingAccount.Name) {
-		c.Abort("400")
-	}
-	//avoid same name resistration
-	if models.ExistSameName(&updatingAccount) {
+	isValid := ConfirmAccountName(updatingAccount.Name)
+	if !isValid {
+		fmt.Println("invalid AccountName")
 		c.Abort("400")
 	}
 	account.Name = updatingAccount.Name
@@ -148,4 +142,15 @@ func(c *AccountsController) Destroy() {
 	}
 	c.DestroySession()
 	c.Ctx.Redirect(302, "/")
+}
+
+func ConfirmAccountName(name string) (bool) {
+	nameRegex := regexp.MustCompile(`^[a-z\d]{1,32}$`)
+	if !nameRegex.MatchString(name) {
+		return false
+	}
+	if exist := models.ExistSameAccountName(name); exist {
+		return false
+	}
+	return true
 }

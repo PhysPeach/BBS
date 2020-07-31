@@ -81,8 +81,8 @@ func DeleteAccount(id int64) (err error) {
 	return
 }
 
-func ExistSameName(m *Account) (exist bool) {
+func ExistSameAccountName(name string) (exist bool) {
 	o := orm.NewOrm()
-	exist = o.QueryTable(new(Account)).Filter("name", m.Name).Exist()
+	exist = o.QueryTable(new(Account)).Filter("Name", name).Exist()
 	return
 }
