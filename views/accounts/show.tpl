@@ -11,10 +11,10 @@
       </div>
     </div>
   </div>
-  {{if .sessName}}
+  {{if .sessAccountName}}
     <h1>New Thread</h1>
     <div class="black-block">
-      <form action="/{{.sessName}}" method="POST">
+      <form action="/{{.sessAccountName}}" method="POST">
         <input type="text" class="form-underbar-input" placeholder="Title" name="Title">
         <br>
         <textarea class="form-textarea" placeholder="Description" name="Description"></textarea>

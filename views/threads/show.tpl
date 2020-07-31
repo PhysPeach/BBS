@@ -31,7 +31,7 @@
       </div>
     </section>
   {{end}}
-    {{if .sessName}}
+    {{if .sessAccountName}}
       <h1>New Comment</h1>
       <div class="black-block">
         <form action="/{{.thread.HostAccount.Name}}/{{.thread.ID}}" method="POST">

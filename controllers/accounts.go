@@ -66,12 +66,11 @@ func (c *AccountsController) Create() {
 		fmt.Println(err)
 		c.Abort("500")
 	}
-	c.SetSession("sessName", account.Name)
+	c.SetSession("sessAccountID", account.ID)
 	c.Ctx.Redirect(302, "/" + account.Name)
 }
 
 func (c *AccountsController) Show() {
-	sessName := c.GetSession("sessName")
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
 		fmt.Println("Nil Account")
@@ -82,29 +81,36 @@ func (c *AccountsController) Show() {
 	if err != nil {
 		c.Abort("500")
 	}
+	sessAccountID := c.GetSession("sessAccountID")
+	if sessAccountID != nil{
+		sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
+		c.Data["sessAccountName"] = sessAccount.Name
+		c.Data["editable"] = (sessAccount.Name == account.Name)
+	}
 	c.Data["account"] = account
 	c.Data["threads"] = threads
-	c.Data["editable"] = (sessName == account.Name)
-	c.Data["sessName"] = sessName
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/show.tpl"
 }
 
 func (c *AccountsController) Edit() {
-	sessName := c.GetSession("sessName")
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
 		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
-	if sessName != account.Name {
-		c.Abort("403")
-	} else {
-		c.Data["accountname"] = account.Name
-		c.Data["sessName"] = sessName
-		c.Layout = "layouts/application.tpl"
-		c.TplName = "accounts/edit.tpl"
+	sessAccountID := c.GetSession("sessAccountID")
+	if sessAccountID == nil{
+		c.Abort("500")
 	}
+	sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
+	if sessAccount.Name != account.Name {
+		c.Abort("403")
+	}
+	c.Data["sessAccountName"] = sessAccount.Name
+	c.Data["accountname"] = account.Name
+	c.Layout = "layouts/application.tpl"
+	c.TplName = "accounts/edit.tpl"
 }
 
 func(c *AccountsController) Update() {

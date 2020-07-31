@@ -20,8 +20,11 @@ func (c *CommentsController) URLMapping() {
 }
 
 func (c *CommentsController) Create() {
-	sessName := c.GetSession("sessName")
-	hostAccount, err := models.GetAccountByName(sessName.(string))
+	sessAccountID := c.GetSession("sessAccountID")
+	if sessAccountID == nil{
+		c.Abort("500")
+	}
+	hostAccount, err := models.GetAccountById(sessAccountID.(int64))
 	if err != nil{
 		fmt.Println("Nil Account")
 		c.Abort("400")

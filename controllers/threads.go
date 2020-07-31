@@ -23,11 +23,16 @@ func (c *ThreadsController) URLMapping() {
 }
 
 func (c *ThreadsController) Index() {
-	c.Data["sessName"] = c.GetSession("sessName")
+	var sessAccountName string
+	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != nil{
+		sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
+		sessAccountName = sessAccount.Name
+	}
 	threads, err := models.GetAllThread()
 	if err != nil{
 		c.Abort("500")
 	}
+	c.Data["sessAccountName"] = sessAccountName
 	c.Data["threads"] = threads
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/index.tpl"
@@ -59,7 +64,11 @@ func (c *ThreadsController) Create() {
 }
 
 func (c *ThreadsController) Show() {
-	sessName := c.GetSession("sessName")
+	var sessAccountName string
+	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != nil{
+		sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
+		sessAccountName = sessAccount.Name
+	}
 	threadid, err := strconv.ParseInt(c.Ctx.Input.Param(":threadid"), 10, 64)
 	if err != nil {
 		c.Abort("500")
@@ -74,8 +83,8 @@ func (c *ThreadsController) Show() {
 	}
 	c.Data["thread"] = thread
 	c.Data["comments"] = comments
-	c.Data["editable"] = (sessName == thread.HostAccount.Name)
-	c.Data["sessName"] = sessName
+	c.Data["editable"] = (sessAccountName == thread.HostAccount.Name)
+	c.Data["sessAccountName"] = sessAccountName
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/show.tpl"
 }

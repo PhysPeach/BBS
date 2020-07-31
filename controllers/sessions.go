@@ -39,8 +39,7 @@ func (c *SessionsController) Create() {
 		fmt.Println("Account does not exist")
 		c.Abort("400")
 	}
-	c.SetSession("sessName", account.Name)
-	fmt.Println("Success to create session")
+	c.SetSession("sessAccountID", account.ID)
 	c.Ctx.Redirect(302, "/" + account.Name)
 }
 

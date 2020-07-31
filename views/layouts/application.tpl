@@ -12,8 +12,8 @@
     <nav>
       <a href="/" class="text-link">Peachな掲示板</a>
       <div class="nav-right">
-        {{if .sessName}}
-          <a href="/{{.sessName}}" class="button">{{.sessName}}</a>
+        {{if .sessAccountName}}
+          <a href="/{{.sessAccountName}}" class="button">{{.sessAccountName}}</a>
           <form action="/login" method="POST">
             <input type="hidden" name="_method" value="DELETE">
             <input type="submit" class="form-submit" value="Log out">
