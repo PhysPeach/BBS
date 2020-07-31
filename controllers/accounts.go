@@ -121,8 +121,8 @@ func(c *AccountsController) Update() {
 
 	updatingAccount := models.Account{
 		Name: c.GetString("Name")}
-	nameRegex := regexp.MustCompile(`^[a-z\d]{8,32}$`)
-	if !nameRegex.MatchString(account.Name) {
+	nameRegex := regexp.MustCompile(`^[a-z\d]{1,32}$`)
+	if !nameRegex.MatchString(updatingAccount.Name) {
 		c.Abort("400")
 	}
 	//avoid same name resistration
