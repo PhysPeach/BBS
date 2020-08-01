@@ -68,6 +68,11 @@ func (c *AccountsController) Create() {
 }
 
 func (c *AccountsController) Show() {
+	var sessAccountName string
+	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != nil{
+		sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
+		sessAccountName = sessAccount.Name
+	}
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
 		fmt.Println("Nil Account")
@@ -78,12 +83,8 @@ func (c *AccountsController) Show() {
 	if err != nil {
 		c.Abort("500")
 	}
-	sessAccountID := c.GetSession("sessAccountID")
-	if sessAccountID != nil{
-		sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
-		c.Data["sessAccountName"] = sessAccount.Name
-		c.Data["editable"] = (sessAccount.Name == account.Name)
-	}
+	c.Data["sessAccountName"] = sessAccountName
+	c.Data["editable"] = (sessAccountName == account.Name)
 	c.Data["account"] = account
 	c.Data["threads"] = threads
 	c.Layout = "layouts/application.tpl"
