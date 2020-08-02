@@ -44,6 +44,9 @@ func (c *ThreadsController) Create() {
 		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
+	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != hostAccount.ID {
+		c.Abort("500")
+	}
 	thread := models.Thread{
 		Title: c.GetString("Title"),
 		Description: c.GetString("Description"),
@@ -99,6 +102,13 @@ func (c *ThreadsController) Show() {
 func (c *ThreadsController) Destroy() {
 	threadid, err := strconv.ParseInt(c.Ctx.Input.Param(":threadid"), 10, 64)
 	if err != nil {
+		c.Abort("500")
+	}
+	thread, err := models.GetThreadById(threadid)
+	if err != nil {
+		c.Abort("500")
+	}
+	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != thread.HostAccount.ID {
 		c.Abort("500")
 	}
 	if err = models.DeleteThread(threadid); err != nil {
