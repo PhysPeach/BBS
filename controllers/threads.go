@@ -70,7 +70,7 @@ func (c *ThreadsController) Show() {
 		sessAccountName = sessAccount.Name
 	}
 	threadidStr := c.Ctx.Input.Param(":threadid")
-	if len(threadidStr) >= 2 || threadidStr[0:1] == "0" {
+	if len(threadidStr) >= 2 && threadidStr[0:1] == "0" {
 		c.Abort("400")
 	}
 	threadid, err := strconv.ParseInt(threadidStr, 10, 64)
