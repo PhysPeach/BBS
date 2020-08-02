@@ -11,7 +11,7 @@
       </div>
     </div>
   </div>
-  {{if .sessAccountName}}
+  {{if .editable}}
     <h1>New Thread</h1>
     <div class="black-block">
       <form action="/{{.sessAccountName}}" method="POST">
