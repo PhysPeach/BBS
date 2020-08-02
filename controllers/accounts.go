@@ -116,7 +116,9 @@ func(c *AccountsController) Update() {
 	if err != nil {
 		c.Abort("500")
 	}
-
+	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != account.ID {
+		c.Abort("500")
+	}
 	updatingAccount := models.Account{
 		Name: c.GetString("Name")}
 	isValid := ConfirmAccountName(updatingAccount.Name)
@@ -135,6 +137,9 @@ func(c *AccountsController) Destroy() {
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil {
 		fmt.Println(err)
+		c.Abort("500")
+	}
+	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != account.ID {
 		c.Abort("500")
 	}
 	if err = models.DeleteAccount(account.ID); err != nil {
