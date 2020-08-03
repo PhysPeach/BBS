@@ -3,5 +3,4 @@ httpport = 8080
 runmode = dev
 SessionOn = true
 
-psqlConn = postgres://physpeach:physpeach@127.0.0.1:5432/bbs?sslmode=disable
-passSalt = salt
+psqlConn = postgres://user:pass@127.0.0.1:port/db_name?sslmode=disable
