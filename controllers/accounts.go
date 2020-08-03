@@ -3,7 +3,6 @@ package controllers
 import (
 	"fmt"
 	"regexp"
-	"time"
 	"encoding/hex"
 	"golang.org/x/crypto/bcrypt"
 	"github.com/physpeach/bbs/models"
@@ -51,8 +50,7 @@ func (c *AccountsController) Create() {
 	password := hex.EncodeToString(hashed[:])
 	account := models.Account{
 		Name: c.GetString("Name"),
-		Password: password,
-		CreatedAt: time.Now()}
+		Password: password}
 	isValid := ConfirmAccountName(account.Name)
 	if !isValid {
 		fmt.Println("invalid AccountName")

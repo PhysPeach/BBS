@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"time"
 	"strconv"
 	"unicode/utf8"
 	"github.com/physpeach/bbs/models"
@@ -40,7 +39,6 @@ func (c *CommentsController) Create() {
 	}
 	comment := models.Comment{
 		Content: c.GetString("Content"),
-		CreatedAt: time.Now(),
 		HostAccount: hostAccount,
 		HostThread: hostThread,
 	}

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"time"
 	"strconv"
 	"unicode/utf8"
 	"github.com/physpeach/bbs/models"
@@ -50,7 +49,6 @@ func (c *ThreadsController) Create() {
 	thread := models.Thread{
 		Title: c.GetString("Title"),
 		Description: c.GetString("Description"),
-		CreatedAt: time.Now(),
 		HostAccount: hostAccount,
 	}
 	if thread.Title == "" || 64 < utf8.RuneCountInString(thread.Title) {
