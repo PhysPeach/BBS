@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"time"
 	"encoding/hex"
-	"golang.org/x/crypto/scrypt"
+	"golang.org/x/crypto/bcrypt"
 	"github.com/physpeach/bbs/models"
 	"github.com/astaxie/beego"
 )
@@ -36,7 +36,6 @@ func (c *AccountsController) New(){
 // @Param      Name {string} string true
 // @router / [post]
 func (c *AccountsController) Create() {
-	passSalt := beego.AppConfig.String("passSalt")
 	unhashed := c.GetString("Password")
 	if unhashed != c.GetString("PasswordConfirmation"){
 		c.Abort("400")
@@ -45,7 +44,7 @@ func (c *AccountsController) Create() {
 	if !passRegex.MatchString(unhashed) {
 		c.Abort("400")
 	}
-	hashed, err := scrypt.Key([]byte(unhashed), []byte(passSalt), 32768, 8, 1, 32)
+	hashed, err := bcrypt.GenerateFromPassword([]byte(unhashed), 12)
 	if err != nil {
 		c.Abort("500")
 	}

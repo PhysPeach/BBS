@@ -1,9 +1,8 @@
 package controllers
 
 import (
-	"fmt"
 	"encoding/hex"
-	"golang.org/x/crypto/scrypt"
+	"golang.org/x/crypto/bcrypt"
 	"github.com/astaxie/beego"
 
 	"github.com/physpeach/bbs/models"
@@ -36,7 +35,6 @@ func (c *SessionsController) New() {
 func (c *SessionsController) Create() {
 	isCorrect, account := ConfirmAccountPassword(c)
 	if !isCorrect {
-		fmt.Println("invalid")
 		c.Abort("400")
 	}
 	c.SetSession("sessAccountID", account.ID)
@@ -50,18 +48,16 @@ func (c *SessionsController) Destroy() {
 
 func ConfirmAccountPassword(c *SessionsController)(bool, *models.Account){
 	accountName := c.GetString("Name")
-	passSalt := beego.AppConfig.String("passSalt")
 	unhashed := c.GetString("Password")
-	hashed, err := scrypt.Key([]byte(unhashed), []byte(passSalt), 32768, 8, 1, 32)
-	if err != nil {
-		c.Abort("500")
-	}
-	password := hex.EncodeToString(hashed[:])
 	account, err := models.GetAccountByName(accountName)
 	if err != nil{
 		return false, account
 	}
-	if account.Password != "0123" && password != account.Password {
+	hashed, err := hex.DecodeString(account.Password)
+	if err != nil{
+		c.Abort("500")
+	}
+	if err := bcrypt.CompareHashAndPassword(hashed, []byte(unhashed)); account.Password != "0123" && err != nil {
 		return false, account
 	}
 	return (account.ID != 0), account
