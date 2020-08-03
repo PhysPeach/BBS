@@ -36,7 +36,7 @@ func (c *SessionsController) New() {
 func (c *SessionsController) Create() {
 	isCorrect, account := ConfirmAccountPassword(c)
 	if !isCorrect {
-		fmt.Println("Account does not exist")
+		fmt.Println("invalid")
 		c.Abort("400")
 	}
 	c.SetSession("sessAccountID", account.ID)
@@ -58,12 +58,11 @@ func ConfirmAccountPassword(c *SessionsController)(bool, *models.Account){
 	}
 	password := hex.EncodeToString(hashed[:])
 	account, err := models.GetAccountByName(accountName)
-	if account.Password != "0123" && password != account.Password {
+	if err != nil{
 		return false, account
 	}
-	if err != nil{
-		c.Abort("500")
-		fmt.Println(err)
+	if account.Password != "0123" && password != account.Password {
+		return false, account
 	}
 	return (account.ID != 0), account
 }
