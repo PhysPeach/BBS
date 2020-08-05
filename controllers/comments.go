@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"strconv"
 	"unicode/utf8"
 	"github.com/physpeach/bbs/models"
@@ -21,11 +20,10 @@ func (c *CommentsController) URLMapping() {
 func (c *CommentsController) Create() {
 	sessAccountID := c.GetSession("sessAccountID")
 	if sessAccountID == nil{
-		c.Abort("500")
+		c.Abort("401")
 	}
 	hostAccount, err := models.GetAccountById(sessAccountID.(int64))
 	if err != nil{
-		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
 	hostThreadid, err := strconv.ParseInt(c.Ctx.Input.Param(":threadid"), 10, 64)
@@ -34,7 +32,6 @@ func (c *CommentsController) Create() {
 	}
 	hostThread, err := models.GetThreadById(hostThreadid)
 	if err != nil{
-		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
 	comment := models.Comment{
@@ -42,7 +39,6 @@ func (c *CommentsController) Create() {
 		HostAccount: hostAccount,
 		HostThread: hostThread,
 	}
-	fmt.Println(comment.Content)
 	if comment.Content == "" || 1024 < utf8.RuneCountInString(comment.Content){
 		c.Abort("400")
 	}

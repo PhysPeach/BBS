@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"strconv"
 	"unicode/utf8"
 	"github.com/physpeach/bbs/models"
@@ -40,11 +39,10 @@ func (c *ThreadsController) Index() {
 func (c *ThreadsController) Create() {
 	hostAccount, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
-		fmt.Println("Nil Account")
 		c.Abort("400")
 	}
 	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != hostAccount.ID {
-		c.Abort("500")
+		c.Abort("401")
 	}
 	thread := models.Thread{
 		Title: c.GetString("Title"),
@@ -80,10 +78,10 @@ func (c *ThreadsController) Show() {
 	}
 	thread, err := models.GetThreadById(threadid)
 	if err != nil {
-		c.Abort("500")
+		c.Abort("404")
 	}
 	if thread.HostAccount.Name != c.Ctx.Input.Param(":accountname"){
-		c.Abort("400")
+		c.Abort("404")
 	}
 	comments, err := models.GetAllCommentByHostThreadId(threadid)
 	if err != nil {
@@ -107,10 +105,9 @@ func (c *ThreadsController) Destroy() {
 		c.Abort("500")
 	}
 	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != thread.HostAccount.ID {
-		c.Abort("500")
+		c.Abort("401")
 	}
 	if err = models.DeleteThread(threadid); err != nil {
-		fmt.Println(err)
 		c.Abort("500")
 	}
 	c.Ctx.Redirect(302, "/")

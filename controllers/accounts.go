@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"regexp"
 	"encoding/hex"
 	"golang.org/x/crypto/bcrypt"
@@ -53,11 +52,9 @@ func (c *AccountsController) Create() {
 		Password: password}
 	isValid := ConfirmAccountName(account.Name)
 	if !isValid {
-		fmt.Println("invalid AccountName")
 		c.Abort("400")
 	}
 	if _, err := models.AddAccount(&account); err != nil {
-		fmt.Println(err)
 		c.Abort("500")
 	}
 	c.SetSession("sessAccountID", account.ID)
@@ -72,8 +69,7 @@ func (c *AccountsController) Show() {
 	}
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
-		fmt.Println("Nil Account")
-		c.Abort("400")
+		c.Abort("404")
 	}
 
 	threads, err := models.GetAllThreadByHostAccountId(account.ID)
@@ -91,16 +87,15 @@ func (c *AccountsController) Show() {
 func (c *AccountsController) Edit() {
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil{
-		fmt.Println("Nil Account")
-		c.Abort("400")
+		c.Abort("404")
 	}
 	sessAccountID := c.GetSession("sessAccountID")
 	if sessAccountID == nil{
-		c.Abort("500")
+		c.Abort("401")
 	}
 	sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
 	if sessAccount.Name != account.Name {
-		c.Abort("403")
+		c.Abort("401")
 	}
 	c.Data["sessAccountName"] = sessAccount.Name
 	c.Data["accountname"] = account.Name
@@ -111,16 +106,15 @@ func (c *AccountsController) Edit() {
 func(c *AccountsController) Update() {
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil {
-		c.Abort("500")
+		c.Abort("404")
 	}
 	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != account.ID {
-		c.Abort("500")
+		c.Abort("401")
 	}
 	updatingAccount := models.Account{
 		Name: c.GetString("Name")}
 	isValid := ConfirmAccountName(updatingAccount.Name)
 	if !isValid {
-		fmt.Println("invalid AccountName")
 		c.Abort("400")
 	}
 	account.Name = updatingAccount.Name
@@ -133,14 +127,12 @@ func(c *AccountsController) Update() {
 func(c *AccountsController) Destroy() {
 	account, err := models.GetAccountByName(c.Ctx.Input.Param(":accountname"))
 	if err != nil {
-		fmt.Println(err)
 		c.Abort("500")
 	}
 	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != account.ID {
-		c.Abort("500")
+		c.Abort("401")
 	}
 	if err = models.DeleteAccount(account.ID); err != nil {
-		fmt.Println(err)
 		c.Abort("500")
 	}
 	c.DestroySession()
