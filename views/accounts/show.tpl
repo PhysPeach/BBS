@@ -28,7 +28,7 @@
     <section class="Thread">
       <div class="black-block">
         <div class="block-flex">
-          <h1><a href="/{{$thread.HostAccount.Name}}/{{$thread.ID}}" class="text-link">{{$thread.Title}}</a></h1>
+          <h1><a href="/{{$thread.HostAccount.Name}}/{{$thread.ID}}" class="text-link">{{$thread.HostAccount.Name}}</a></h1>
         </div>
         <a href="/{{$thread.HostAccount.Name}}/{{$thread.ID}}" class="text-link">
           <div class="white-block">
