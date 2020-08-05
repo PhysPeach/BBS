@@ -9,7 +9,7 @@ import (
 
 type Comment struct {
 	ID   int64 `orm:"column(id);auto"` 
-	Content string `orm:"column(content);size(1024);"`
+	Content string `orm:"column(content);size(1024);" form:"Content" valid:"Required;MinSize(1);MaxSize(1024)"`
 	CreatedAt time.Time `orm:"column(created_at);type(datetime);auto_now_add"`
 	HostAccount *Account `orm:"column(host_account_id);rel(fk)"`
 	HostThread *Thread `orm:"column(host_thread_id);rel(fk)"`

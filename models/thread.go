@@ -9,8 +9,8 @@ import (
 
 type Thread struct {
 	ID   int64 `orm:"column(id);auto"` 
-	Title string `orm:"column(title);size(64);"` //have to avoid same Title
-	Description string `orm:"column(description);size(256);"`
+	Title string `orm:"column(title);size(64);" form:"Title" valid:"Required;MinSize(1);MaxSize(64)"`
+	Description string `orm:"column(description);size(256);" form:"Description" valid:"Required;MinSize(1);MaxSize(256)"`
 	CreatedAt time.Time `orm:"column(created_at);type(datetime);auto_now_add"`
 	HostAccount *Account `orm:"column(host_account_id);rel(fk)"`
 	Comments []*Comment `orm:"reverse(many)"`

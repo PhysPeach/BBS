@@ -8,8 +8,8 @@ import (
 
 type Account struct {
 	ID   int64 `orm:"column(id);auto"` 
-	Name string `orm:"column(name);size(32);"` //have to avoid same Name
-	Password string `orm:"column(password);size(32)"`
+	Name string `orm:"column(name);size(32);index" form:"Name" valid:"Required;MinSize(1);MaxSize(32)"`
+	Password string `orm:"column(password);"`
 	CreatedAt time.Time `orm:"column(created_at);type(datetime);auto_now_add"`
 	Threads []*Thread `orm:"reverse(many)"`
 }
