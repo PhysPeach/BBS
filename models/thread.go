@@ -13,6 +13,7 @@ type Thread struct {
 	Description string `orm:"column(description);size(256);"`
 	CreatedAt time.Time `orm:"column(created_at);type(datetime);auto_now_add"`
 	HostAccount *Account `orm:"column(host_account_id);rel(fk)"`
+	Comments []*Comment `orm:"reverse(many)"`
 }
 
 func init() {
@@ -32,10 +33,11 @@ func AddThread(m *Thread) (id int64, err error) {
 func GetThreadById(id int64) (v *Thread, err error) {
 	o := orm.NewOrm()
 	v = &Thread{ID: id}
-	if err = o.QueryTable(new(Thread)).Filter("ID", id).RelatedSel().One(v); err == nil {
-		return v, nil
+	if err = o.QueryTable(new(Thread)).Filter("ID", id).RelatedSel().One(v); err != nil {
+		return nil, err
 	}
-	return nil, err
+	o.LoadRelated(v, "Comments", 1)
+	return v, nil
 }
 
 func GetAllThreadByHostAccountId(id int64)(threads []Thread, err error){

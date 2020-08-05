@@ -18,7 +18,7 @@
     </div>
   </div>
   <div class="main">
-    {{range $key, $comment := .comments}}
+    {{range $key, $comment := .thread.Comments}}
       <section class="Comment">
       <div class="black-block">
         <h1><a href="/{{$comment.HostAccount.Name}}" class="text-link">by {{$comment.HostAccount.Name}}</a></h1>

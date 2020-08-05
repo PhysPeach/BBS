@@ -85,12 +85,7 @@ func (c *ThreadsController) Show() {
 	if thread.HostAccount.Name != c.Ctx.Input.Param(":accountname"){
 		c.Abort("400")
 	}
-	comments, err := models.GetAllCommentByHostThreadId(threadid)
-	if err != nil {
-		c.Abort("500")
-	}
 	c.Data["thread"] = thread
-	c.Data["comments"] = comments
 	c.Data["editable"] = (sessAccountName == thread.HostAccount.Name)
 	c.Data["sessAccountName"] = sessAccountName
 	c.Layout = "layouts/application.tpl"

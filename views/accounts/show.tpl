@@ -24,7 +24,7 @@
     </div>
   {{end}}
   <h1>Threads by {{.account.Name}}</h1>
-  {{range $key, $thread := .threads}}
+  {{range $key, $thread := .account.Threads}}
     <section class="Thread">
       <div class="black-block">
         <div class="block-flex">
