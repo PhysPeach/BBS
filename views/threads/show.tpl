@@ -7,6 +7,7 @@
     </div>
     {{if .editable}}
       <form action="/{{.thread.HostAccount.Name}}/{{.thread.ID}}" method="POST">
+        {{.xsrf}}
         <input type="hidden" name="_method" value="DELETE">
         <input type="submit" class="form-submit" value="Delete Thread">
       </form>
@@ -35,6 +36,7 @@
       <h1>New Comment</h1>
       <div class="black-block">
         <form action="/{{.thread.HostAccount.Name}}/{{.thread.ID}}" method="POST">
+          {{.xsrf}}
           <br>
           <textarea class="form-textarea" placeholder="Comment" name="Content"></textarea>
           <br>

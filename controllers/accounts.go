@@ -3,6 +3,7 @@ package controllers
 import (
 	"regexp"
 	"encoding/hex"
+	"html/template"
 	"golang.org/x/crypto/bcrypt"
 	"github.com/physpeach/bbs/models"
 	"github.com/astaxie/beego"
@@ -24,6 +25,7 @@ func (c *AccountsController) URLMapping() {
 }
 
 func (c *AccountsController) New(){
+	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/new.tpl"
 }
@@ -74,6 +76,7 @@ func (c *AccountsController) Show() {
 	c.Data["sessAccountName"] = sessAccountName
 	c.Data["editable"] = (sessAccountName == account.Name)
 	c.Data["account"] = account
+	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/show.tpl"
 }
@@ -93,6 +96,7 @@ func (c *AccountsController) Edit() {
 	}
 	c.Data["sessAccountName"] = sessAccount.Name
 	c.Data["accountname"] = account.Name
+	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/edit.tpl"
 }

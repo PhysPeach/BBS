@@ -4,3 +4,7 @@ runmode = dev
 SessionOn = true
 
 psqlConn = postgres://user:pass@127.0.0.1:port/db_name?sslmode=disable
+
+EnableXSRF = true
+XSRFKey = 
+XSRFExpire = 3600

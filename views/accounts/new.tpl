@@ -2,6 +2,7 @@
   <h1>Sign Up</h1>
   <div class="black-block">
     <form action="/signup" method="POST">
+      {{.xsrf}}
       <input type="text" class="form-underbar-input" placeholder="Name" name="Name">
       <br>
       <input type="password" class="form-underbar-input" placeholder="Password" name="Password">

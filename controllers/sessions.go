@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/hex"
+	"html/template"
 	"golang.org/x/crypto/bcrypt"
 	"github.com/astaxie/beego"
 
@@ -21,6 +22,7 @@ func (c *SessionsController) URLMapping() {
 }
 
 func (c *SessionsController) New() {
+	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "sessions/new.tpl"
 }

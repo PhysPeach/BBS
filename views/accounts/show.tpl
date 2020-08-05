@@ -15,6 +15,7 @@
     <h1>New Thread</h1>
     <div class="black-block">
       <form action="/{{.sessAccountName}}" method="POST">
+        {{.xsrf}}
         <input type="text" class="form-underbar-input" placeholder="Title" name="Title">
         <br>
         <textarea class="form-textarea" placeholder="Description" name="Description"></textarea>

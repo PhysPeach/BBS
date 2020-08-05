@@ -3,6 +3,7 @@ package controllers
 import (
 	"strconv"
 	"unicode/utf8"
+	"html/template"
 	"github.com/physpeach/bbs/models"
 	"github.com/astaxie/beego"
 )
@@ -32,6 +33,7 @@ func (c *ThreadsController) Index() {
 	}
 	c.Data["sessAccountName"] = sessAccountName
 	c.Data["threads"] = threads
+	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/index.tpl"
 }
@@ -87,6 +89,7 @@ func (c *ThreadsController) Show() {
 	c.Data["thread"] = thread
 	c.Data["editable"] = (sessAccountName == thread.HostAccount.Name)
 	c.Data["sessAccountName"] = sessAccountName
+	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "threads/show.tpl"
 }
