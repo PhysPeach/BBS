@@ -30,6 +30,9 @@ func (c *CommentsController) Create() {
 	if err != nil {
 		c.Abort("500")
 	}
+	if sessLastVisitedThread := c.GetSession("sessLastVisitedThread"); sessLastVisitedThread != hostThreadid {
+		c.Abort("400")
+	}
 	hostThread, err := models.GetThreadById(hostThreadid)
 	if err != nil{
 		c.Abort("400")

@@ -83,6 +83,7 @@ func (c *ThreadsController) Show() {
 	if thread.HostAccount.Name != c.Ctx.Input.Param(":accountname"){
 		c.Abort("404")
 	}
+	c.SetSession("sessLastVisitedThreadID", threadid)
 	c.Data["thread"] = thread
 	c.Data["editable"] = (sessAccountName == thread.HostAccount.Name)
 	c.Data["sessAccountName"] = sessAccountName
