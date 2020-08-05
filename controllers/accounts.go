@@ -71,15 +71,9 @@ func (c *AccountsController) Show() {
 	if err != nil{
 		c.Abort("404")
 	}
-
-	threads, err := models.GetAllThreadByHostAccountId(account.ID)
-	if err != nil {
-		c.Abort("500")
-	}
 	c.Data["sessAccountName"] = sessAccountName
 	c.Data["editable"] = (sessAccountName == account.Name)
 	c.Data["account"] = account
-	c.Data["threads"] = threads
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/show.tpl"
 }

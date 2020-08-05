@@ -11,6 +11,7 @@ type Account struct {
 	Name string `orm:"column(name);size(32);"` //have to avoid same Name
 	Password string `orm:"column(password);size(32)"`
 	CreatedAt time.Time `orm:"column(created_at);type(datetime);auto_now_add"`
+	Threads []*Thread `orm:"reverse(many)"`
 }
 
 func init() {
@@ -30,19 +31,21 @@ func AddAccount(m *Account) (id int64, err error) {
 func GetAccountById(id int64) (v *Account, err error) {
 	o := orm.NewOrm()
 	v = &Account{ID: id}
-	if err = o.QueryTable(new(Account)).Filter("Id", id).RelatedSel().One(v); err == nil {
-		return v, nil
+	if err = o.QueryTable(new(Account)).Filter("Id", id).RelatedSel().One(v); err != nil {
+		return nil, err
 	}
-	return nil, err
+	o.LoadRelated(v, "Threads", 1)
+	return v, nil
 }
 
 func GetAccountByName(name string) (v *Account, err error) {
 	o := orm.NewOrm()
 	v = &Account{Name: name}
-	if err = o.QueryTable(new(Account)).Filter("Name", name).RelatedSel().One(v); err == nil {
-		return v, nil
+	if err = o.QueryTable(new(Account)).Filter("Name", name).RelatedSel().One(v); err != nil {
+		return nil, err
 	}
-	return nil, err
+	o.LoadRelated(v, "Threads", 1)
+	return v, nil
 }
 
 func GetAllAccount() (accounts []Account, err error) {
