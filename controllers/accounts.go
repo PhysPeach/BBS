@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"errors"
+	"fmt"
 	"regexp"
 	"encoding/hex"
 	"html/template"
@@ -25,6 +27,11 @@ func (c *AccountsController) URLMapping() {
 }
 
 func (c *AccountsController) New(){
+	signupErrors := c.GetSession("signupErrors")
+	if signupErrors != nil {
+		c.DelSession("signupErrors")
+	}
+	c.Data["signupErrors"] = signupErrors
 	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/new.tpl"
@@ -36,31 +43,41 @@ func (c *AccountsController) New(){
 // @Param      Name {string} string true
 // @router / [post]
 func (c *AccountsController) Create() {
-	unhashed := c.GetString("Password")
-	if unhashed != c.GetString("PasswordConfirmation"){
-		c.Abort("400")
+	isValid := true
+	var signupErrors []error
+	accountName :=c.GetString("Name")
+	isValid, tmp := ConfirmAccountName(accountName)
+	if tmp != nil{
+		signupErrors = append(signupErrors, tmp)
 	}
+	unhashed := c.GetString("Password")
 	passRegex := regexp.MustCompile(`^[a-zA-Z\d]{8,32}$`)
 	if !passRegex.MatchString(unhashed) {
-		c.Abort("400")
+		isValid = false
+		signupErrors = append(signupErrors, errors.New(`Wrong password format: (should be meet ^[a-zA-Z\d]{8,32}$)`))
+	}
+	if unhashed != c.GetString("PasswordConfirmation"){
+		isValid = false
+		signupErrors = append(signupErrors, errors.New("Password confirmation has failed."))
 	}
 	hashed, err := bcrypt.GenerateFromPassword([]byte(unhashed), 12)
 	if err != nil {
 		c.Abort("500")
 	}
-	password := hex.EncodeToString(hashed[:])
-	account := models.Account{
-		Name: c.GetString("Name"),
-		Password: password}
-	isValid := ConfirmAccountName(account.Name)
 	if !isValid {
-		c.Abort("400")
+		c.SetSession("signupErrors", signupErrors)
+		c.Ctx.Redirect(302, "signup/new")
+	} else {
+		password := hex.EncodeToString(hashed[:])
+		account := models.Account{
+		Name: accountName,
+		Password: password}
+		if _, err := models.AddAccount(&account); err != nil {
+			c.Abort("500")
+		}
+		c.SetSession("sessAccountID", account.ID)
+		c.Ctx.Redirect(302, "/" + account.Name)
 	}
-	if _, err := models.AddAccount(&account); err != nil {
-		c.Abort("500")
-	}
-	c.SetSession("sessAccountID", account.ID)
-	c.Ctx.Redirect(302, "/" + account.Name)
 }
 
 func (c *AccountsController) Show() {
@@ -92,8 +109,14 @@ func (c *AccountsController) Edit() {
 	}
 	sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
 	if sessAccount.Name != account.Name {
+		fmt.Println("flakwejf")
 		c.Abort("401")
 	}
+	updateError := c.GetSession("updateError")
+	if updateError != nil {
+		c.DelSession("updateError")
+	}
+	c.Data["updateError"] = updateError
 	c.Data["sessAccountName"] = sessAccount.Name
 	c.Data["accountname"] = account.Name
 	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
@@ -109,17 +132,18 @@ func(c *AccountsController) Update() {
 	if sessAccountID := c.GetSession("sessAccountID"); sessAccountID != account.ID {
 		c.Abort("401")
 	}
-	updatingAccount := models.Account{
-		Name: c.GetString("Name")}
-	isValid := ConfirmAccountName(updatingAccount.Name)
+	updatingAccountName := c.GetString("Name")
+	isValid ,updateError := ConfirmAccountName(updatingAccountName)
 	if !isValid {
-		c.Abort("400")
+		c.SetSession("updateError", updateError)
+		c.Ctx.Redirect(302, "/" + account.Name + "/edit")
+	} else {
+		account.Name = updatingAccountName
+		if err := models.UpdateAccountById(account); err != nil {
+			c.Abort("500")
+		}
+		c.Ctx.Redirect(302, "/" + account.Name)
 	}
-	account.Name = updatingAccount.Name
-	if err := models.UpdateAccountById(account); err != nil {
-		c.Abort("500")
-	}
-	c.Ctx.Redirect(302, "/" + account.Name)
 }
 
 func(c *AccountsController) Destroy() {
@@ -137,17 +161,17 @@ func(c *AccountsController) Destroy() {
 	c.Ctx.Redirect(302, "/")
 }
 
-func ConfirmAccountName(name string) (bool) {
+func ConfirmAccountName(name string) (bool, error) {
 	nameRegex := regexp.MustCompile(`^[a-z\d]{1,32}$`)
 	if !nameRegex.MatchString(name) {
-		return false
+		return false, errors.New(name + ` is wrong name format: (should be meet ^[a-z\d]{1,32}$`)
 	}
 	if exist := models.ExistSameAccountName(name); exist {
-		return false
+		return false, errors.New(name + " has already existed.")
 	}
 	//blacklist
 	if name == "login" || name == "signup"{
-		return false
+		return false, errors.New(name + " is forbidden.")
 	}
-	return true
+	return true, nil
 }

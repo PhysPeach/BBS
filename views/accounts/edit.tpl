@@ -1,5 +1,12 @@
 <section class="profile">
   <h1>Edit Profile</h1>
+  {{if .updateError}}
+      <div class="errors">
+        <ul>
+          <li>{{.updateError}}</li>
+        <ul>
+      </div>
+    {{end}}
   <div class="black-block">
     <form action="/{{.accountname}}" method="POST">
       {{.xsrf}}

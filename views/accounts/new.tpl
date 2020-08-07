@@ -1,5 +1,14 @@
 <section class="sign-up">
   <h1>Sign Up</h1>
+  {{if .signupErrors}}
+    <div class="errors">
+      <ul>
+        {{range $key, $signupError := .signupErrors}}
+        <li>{{$signupError}}</li>
+        {{end}}
+      <ul>
+    </div>
+  {{end}}
   <div class="black-block">
     <form action="/signup" method="POST">
       {{.xsrf}}

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"errors"
 	"encoding/hex"
 	"html/template"
 	"golang.org/x/crypto/bcrypt"
@@ -22,6 +23,11 @@ func (c *SessionsController) URLMapping() {
 }
 
 func (c *SessionsController) New() {
+	loginError := c.GetSession("loginError")
+	if loginError != nil {
+		c.DelSession("loginError")
+	}
+	c.Data["loginError"] = loginError
 	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "sessions/new.tpl"
@@ -37,7 +43,8 @@ func (c *SessionsController) New() {
 func (c *SessionsController) Create() {
 	isCorrect, account := ConfirmAccountPassword(c)
 	if !isCorrect {
-		c.Abort("400")
+		c.SetSession("loginError", errors.New("Wrong name or password"))
+		c.Ctx.Redirect(302, "/login/new")
 	}
 	c.SetSession("sessAccountID", account.ID)
 	c.Ctx.Redirect(302, "/" + account.Name)

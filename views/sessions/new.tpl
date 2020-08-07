@@ -1,5 +1,12 @@
 <section class="log-in">
     <h1>Log in</h1>
+    {{if .loginError}}
+      <div class="errors">
+        <ul>
+          <li>{{.loginError}}</li>
+        <ul>
+      </div>
+    {{end}}
     <div class="black-block">
       <form action="/login" method="POST">
         {{.xsrf}}
