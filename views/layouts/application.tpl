@@ -15,6 +15,7 @@
         {{if .sessAccountName}}
           <a href="/{{.sessAccountName}}" class="button">{{.sessAccountName}}</a>
           <form action="/login" method="POST">
+            {{.xsrf}}
             <input type="hidden" name="_method" value="DELETE">
             <input type="submit" class="form-submit" value="Log out">
           </form>
