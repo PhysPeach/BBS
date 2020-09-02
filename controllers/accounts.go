@@ -66,7 +66,7 @@ func (c *AccountsController) Create() {
 	}
 	if !isValid {
 		c.SetSession("signupErrors", signupErrors)
-		c.Ctx.Redirect(302, "signup/new")
+		c.Ctx.Redirect(302, "signup")
 	} else {
 		password := hex.EncodeToString(hashed[:])
 		account := models.Account{

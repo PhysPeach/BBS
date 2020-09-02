@@ -44,7 +44,7 @@ func (c *SessionsController) Create() {
 	isCorrect, account := ConfirmAccountPassword(c)
 	if !isCorrect {
 		c.SetSession("loginError", errors.New("Wrong name or password"))
-		c.Ctx.Redirect(302, "/login/new")
+		c.Ctx.Redirect(302, "/login")
 	}
 	c.SetSession("sessAccountID", account.ID)
 	c.Ctx.Redirect(302, "/" + account.Name)

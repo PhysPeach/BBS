@@ -20,8 +20,8 @@
             <input type="submit" class="form-submit" value="Log out">
           </form>
         {{else}}
-          <a href="/signup/new" class="button">Sign up</a>
-          <a href="/login/new" class="button">Log in</a>
+          <a href="/signup" class="button">Sign up</a>
+          <a href="/login" class="button">Log in</a>
         {{end}}
       </div>
     </nav>

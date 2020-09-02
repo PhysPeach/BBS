@@ -14,8 +14,8 @@
   {{else}}
     <h1>Resister</h1>
     <div class="black-block">
-      <a href="/signup/new" class="button">Sign up</a>
-      <a href="/login/new" class="button">Log in</a>
+      <a href="/signup" class="button">Sign up</a>
+      <a href="/login" class="button">Log in</a>
     </div>
   {{end}}
   <h1>Threads</h1>
