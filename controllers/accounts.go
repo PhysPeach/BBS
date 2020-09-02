@@ -27,11 +27,6 @@ func (c *AccountsController) URLMapping() {
 }
 
 func (c *AccountsController) New(){
-	signupErrors := c.GetSession("signupErrors")
-	if signupErrors != nil {
-		c.DelSession("signupErrors")
-	}
-	c.Data["signupErrors"] = signupErrors
 	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"
 	c.TplName = "accounts/new.tpl"
@@ -46,9 +41,9 @@ func (c *AccountsController) Create() {
 	isValid := true
 	var signupErrors []error
 	accountName :=c.GetString("Name")
-	isValid, tmp := ConfirmAccountName(accountName)
-	if tmp != nil{
-		signupErrors = append(signupErrors, tmp)
+	isValid, err := ConfirmAccountName(accountName)
+	if err != nil{
+		signupErrors = append(signupErrors, err)
 	}
 	unhashed := c.GetString("Password")
 	passRegex := regexp.MustCompile(`^[a-zA-Z\d]{8,32}$`)
@@ -64,10 +59,7 @@ func (c *AccountsController) Create() {
 	if err != nil {
 		c.Abort("500")
 	}
-	if !isValid {
-		c.SetSession("signupErrors", signupErrors)
-		c.Ctx.Redirect(302, "signup")
-	} else {
+	if isValid {
 		password := hex.EncodeToString(hashed[:])
 		account := models.Account{
 		Name: accountName,
@@ -78,6 +70,11 @@ func (c *AccountsController) Create() {
 		c.SetSession("sessAccountID", account.ID)
 		c.Ctx.Redirect(302, "/" + account.Name)
 	}
+
+	c.Data["signupErrors"] = signupErrors
+	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
+	c.Layout = "layouts/application.tpl"
+	c.TplName = "accounts/new.tpl"
 }
 
 func (c *AccountsController) Show() {
