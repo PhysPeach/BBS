@@ -12,13 +12,15 @@
       </form>
     </div>
   {{else}}
-    <h1>Resister</h1>
+    <h1>Resistration</h1>
     <div class="black-block">
       <a href="/signup" class="button">Sign up</a>
       <a href="/login" class="button">Log in</a>
     </div>
   {{end}}
-  <h1>Threads</h1>
+  {{if .threadExist}}
+    <h1>Threads</h1>
+  {{end}}
   {{range $key, $thread := .threads}}
     <section class="Thread">
       <div class="black-block">

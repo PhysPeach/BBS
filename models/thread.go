@@ -46,9 +46,9 @@ func GetAllThreadByHostAccountId(id int64)(threads []Thread, err error){
 	return
 }
 
-func GetAllThread() (threads []Thread, err error) {
+func GetAllThread() (num int64, threads []Thread, err error) {
 	o := orm.NewOrm()
-	_, err = o.QueryTable(new(Thread)).RelatedSel().OrderBy("-created_at").All(&threads)
+	num, err = o.QueryTable(new(Thread)).RelatedSel().OrderBy("-created_at").All(&threads)
 	return
 }
 

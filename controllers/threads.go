@@ -27,11 +27,16 @@ func (c *ThreadsController) Index() {
 		sessAccount, _ := models.GetAccountById(sessAccountID.(int64))
 		sessAccountName = sessAccount.Name
 	}
-	threads, err := models.GetAllThread()
+	num, threads, err := models.GetAllThread()
 	if err != nil{
 		c.Abort("500")
 	}
+	threadExist := true
+	if num == 0 {
+		threadExist = false
+	}
 	c.Data["sessAccountName"] = sessAccountName
+	c.Data["threadExist"] = threadExist
 	c.Data["threads"] = threads
 	c.Data["xsrf"] = template.HTML(c.XSRFFormHTML())
 	c.Layout = "layouts/application.tpl"

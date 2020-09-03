@@ -11,6 +11,9 @@ header {
     font-size: 24px;
     color: #ffffff;
 }
+a {
+    cursor: pointer;
+}
 .main{
     margin-left: 30px;
     margin-right: 30px;
